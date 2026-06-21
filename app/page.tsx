@@ -1,9 +1,17 @@
 import { ArrowDown, Sparkles, Terminal } from "lucide-react";
 import PromptGrid from "@/components/PromptGrid";
 import ThemeToggle from "@/components/ThemeToggle";
+import ChangelogDropdown from "@/components/ChangelogDropdown";
 import { PROMPTS } from "@/lib/prompts";
+import { fetchCommits } from "@/lib/github";
 
-export default function Home() {
+// Server Component — fetch runs at build time, not on every request
+export default async function Home() {
+  const commits = await fetchCommits();
+
+  // Version = short SHA of latest commit, or "dev" fallback
+  const version = commits[0]?.shortSha ?? "dev";
+
   return (
     <div className="min-h-screen" style={{ background: "var(--bg)" }}>
 
@@ -15,15 +23,19 @@ export default function Home() {
           backdropFilter: "blur(20px)",
           borderColor: "var(--border-color)",
         }}
+        aria-label="Navigasi utama"
       >
         <div className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
+          {/* Logo */}
           <div className="flex items-center gap-2">
             <Terminal size={16} style={{ color: "var(--text-muted)" }} aria-hidden="true" />
             <span className="text-sm font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>
               Claude Superprompts
             </span>
           </div>
-          <div className="flex items-center gap-3">
+
+          {/* Nav right — changelog + theme toggle */}
+          <div className="flex items-center gap-2">
             <span
               className="text-[0.7rem] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md hidden sm:block"
               style={{
@@ -34,6 +46,7 @@ export default function Home() {
             >
               untuk developer
             </span>
+            <ChangelogDropdown commits={commits} version={version} />
             <ThemeToggle />
           </div>
         </div>
@@ -75,7 +88,7 @@ export default function Home() {
             untuk proyekmu.
           </h1>
 
-          {/* Sub */}
+          {/* Subtitle */}
           <p
             className="text-[1rem] sm:text-[1.05rem] leading-relaxed mb-10"
             style={{ color: "var(--text-muted)", maxWidth: "480px" }}
@@ -85,7 +98,7 @@ export default function Home() {
             Salin, tempel, dan langsung gunakan.
           </p>
 
-          {/* Stats row */}
+          {/* Stats */}
           <div className="flex items-center gap-6 flex-wrap">
             {[
               { val: `${PROMPTS.length}`, label: "Superprompt" },
@@ -94,11 +107,7 @@ export default function Home() {
             ].map((s, i) => (
               <div key={s.label} className="flex items-center gap-3">
                 {i > 0 && (
-                  <div
-                    className="w-px h-8 hidden sm:block"
-                    style={{ background: "var(--border-color)" }}
-                    aria-hidden="true"
-                  />
+                  <div className="w-px h-8 hidden sm:block" style={{ background: "var(--border-color)" }} aria-hidden="true" />
                 )}
                 <div>
                   <div className="text-xl font-extrabold" style={{ color: "var(--text-primary)" }}>{s.val}</div>
@@ -114,20 +123,14 @@ export default function Home() {
           className="mt-14 rounded-2xl border overflow-hidden"
           style={{ background: "var(--strip-bg)", borderColor: "var(--strip-border)" }}
         >
-          <div
-            className="px-5 py-3 border-b flex items-center gap-2"
-            style={{ borderColor: "var(--strip-border)" }}
-          >
+          <div className="px-5 py-3 border-b flex items-center gap-2" style={{ borderColor: "var(--strip-border)" }}>
             <Sparkles size={13} style={{ color: "var(--text-dim)" }} aria-hidden="true" />
-            <span
-              className="text-[0.7rem] font-semibold uppercase tracking-widest"
-              style={{ color: "var(--text-dim)" }}
-            >
+            <span className="text-[0.7rem] font-semibold uppercase tracking-widest" style={{ color: "var(--text-dim)" }}>
               Cara pakai
             </span>
           </div>
-          <div
-            className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x"
+          <ol
+            className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x list-none p-0 m-0"
             style={{ borderColor: "var(--strip-border)" }}
           >
             {[
@@ -135,27 +138,27 @@ export default function Home() {
               { step: "02", title: "Salin prompt", desc: "Klik tombol salin. Satu klik langsung tersalin ke clipboard." },
               { step: "03", title: "Tempel ke Claude", desc: "Buka Claude, tempel prompt-nya, lalu sertakan kode atau konteks proyekmu." },
             ].map((s) => (
-              <div key={s.step} className="px-5 py-4">
+              <li key={s.step} className="px-5 py-4">
                 <div className="text-[0.68rem] font-black tracking-widest mb-2" style={{ color: "var(--border-color)" }}>
                   {s.step}
                 </div>
                 <div className="text-sm font-semibold mb-1" style={{ color: "var(--text-secondary)" }}>{s.title}</div>
                 <div className="text-[0.78rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>{s.desc}</div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
 
         {/* Scroll hint */}
-        <div className="flex items-center gap-2 mt-8" style={{ color: "var(--text-dim)" }}>
-          <ArrowDown size={14} aria-hidden="true" />
+        <div className="flex items-center gap-2 mt-8" style={{ color: "var(--text-dim)" }} aria-hidden="true">
+          <ArrowDown size={14} />
           <span className="text-[0.72rem] font-medium uppercase tracking-widest">
             Gulir untuk lihat semua prompt
           </span>
         </div>
       </header>
 
-      {/* ── Cards ── */}
+      {/* ── Prompt grid ── */}
       <PromptGrid />
 
       {/* ── Footer ── */}
@@ -168,7 +171,7 @@ export default function Home() {
             </span>
           </div>
           <p className="text-[0.75rem]" style={{ color: "var(--text-dim)" }}>
-            Prompt dikurasi dari{" "}
+            Dikurasi dari{" "}
             <strong style={{ color: "var(--text-muted)" }}>@itsaiguide</strong>
             {" "}· Bebas digunakan dan dibagikan
           </p>
