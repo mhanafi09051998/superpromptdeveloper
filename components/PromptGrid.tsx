@@ -15,8 +15,7 @@ export default function PromptGrid() {
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     return PROMPTS.filter((p) => {
-      const matchFilter =
-        activeFilter === "semua" || p.filters.includes(activeFilter);
+      const matchFilter = activeFilter === "semua" || p.filters.includes(activeFilter);
       const matchSearch =
         !q ||
         p.title.toLowerCase().includes(q) ||
@@ -35,21 +34,22 @@ export default function PromptGrid() {
 
   return (
     <>
-      {/* Sticky header: search + filter */}
+      {/* Sticky search + filter bar */}
       <div
-        className="sticky top-0 z-40 border-b"
+        className="sticky top-14 z-40 border-b"
         style={{
-          background: "rgba(9,9,11,0.92)",
+          background: "var(--bg-nav)",
           backdropFilter: "blur(20px)",
-          borderColor: "#18181b",
+          borderColor: "var(--border-color)",
         }}
       >
         {/* Search */}
-        <div className="max-w-6xl mx-auto px-5 pt-4 pb-3">
+        <div className="max-w-6xl mx-auto px-5 pt-3 pb-2">
           <div className="relative max-w-md">
             <Search
               size={15}
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-600 pointer-events-none"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              style={{ color: "var(--text-dim)" }}
               aria-hidden="true"
             />
             <input
@@ -58,17 +58,18 @@ export default function PromptGrid() {
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari berdasarkan peran, kata kunci..."
               aria-label="Cari prompt"
-              className="w-full rounded-xl py-2.5 pl-10 pr-10 text-sm outline-none transition-colors duration-200 border"
+              className="w-full rounded-xl py-2.5 pl-10 pr-9 text-sm outline-none transition-colors duration-200 border"
               style={{
-                background: "#111113",
-                borderColor: search ? "#3f3f46" : "#27272a",
-                color: "#d4d4d8",
+                background: "var(--input-bg)",
+                borderColor: search ? "var(--text-dim)" : "var(--border-color)",
+                color: "var(--text-primary)",
               }}
             />
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-400 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
+                style={{ color: "var(--text-dim)" }}
                 aria-label="Hapus pencarian"
               >
                 <X size={14} />
@@ -79,7 +80,7 @@ export default function PromptGrid() {
 
         {/* Filters */}
         <div className="filter-scroll max-w-6xl mx-auto px-5 pb-3">
-          <div className="flex gap-2 w-max">
+          <div className="flex gap-2 w-max" role="group" aria-label="Filter prompt">
             {FILTERS.map((f) => {
               const active = activeFilter === f.key;
               return (
@@ -89,9 +90,9 @@ export default function PromptGrid() {
                   aria-pressed={active}
                   className="px-4 py-1.5 rounded-lg text-[0.78rem] font-medium transition-all duration-200 whitespace-nowrap border"
                   style={{
-                    background: active ? "#fafafa" : "transparent",
-                    borderColor: active ? "#fafafa" : "#27272a",
-                    color: active ? "#09090b" : "#71717a",
+                    background: active ? "var(--filter-active-bg)" : "transparent",
+                    borderColor: active ? "var(--filter-active-bg)" : "var(--border-color)",
+                    color: active ? "var(--filter-active-color)" : "var(--text-muted)",
                   }}
                 >
                   {f.label}
@@ -102,11 +103,14 @@ export default function PromptGrid() {
         </div>
       </div>
 
-      {/* Grid */}
+      {/* Cards */}
       <main className="max-w-6xl mx-auto px-5 py-10" id="main-content">
-        {/* Result count */}
         <div className="flex items-center justify-between mb-6">
-          <p className="text-[0.72rem] font-semibold uppercase tracking-widest text-zinc-600" aria-live="polite">
+          <p
+            className="text-[0.72rem] font-semibold uppercase tracking-widest"
+            style={{ color: "var(--text-dim)" }}
+            aria-live="polite"
+          >
             {filtered.length === PROMPTS.length
               ? `${PROMPTS.length} superprompt tersedia`
               : `${filtered.length} dari ${PROMPTS.length} superprompt`}
@@ -114,7 +118,8 @@ export default function PromptGrid() {
           {(search || activeFilter !== "semua") && (
             <button
               onClick={() => { setSearch(""); setActiveFilter("semua"); }}
-              className="text-[0.72rem] text-zinc-600 hover:text-zinc-400 transition-colors underline underline-offset-2"
+              className="text-[0.72rem] underline underline-offset-2 transition-colors"
+              style={{ color: "var(--text-dim)" }}
             >
               Reset filter
             </button>
@@ -130,13 +135,13 @@ export default function PromptGrid() {
         ) : (
           <div className="flex flex-col items-center py-24 text-center">
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
-              style={{ background: "#111113", border: "1px solid #27272a" }}
+              className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 border"
+              style={{ background: "var(--surface-2)", borderColor: "var(--border-color)" }}
             >
-              <Search size={22} className="text-zinc-600" />
+              <Search size={22} style={{ color: "var(--text-dim)" }} />
             </div>
-            <p className="font-semibold text-zinc-400 mb-1">Tidak ada hasil</p>
-            <p className="text-sm text-zinc-600">Coba kata kunci atau filter lain</p>
+            <p className="font-semibold mb-1" style={{ color: "var(--text-muted)" }}>Tidak ada hasil</p>
+            <p className="text-sm" style={{ color: "var(--text-dim)" }}>Coba kata kunci atau filter lain</p>
           </div>
         )}
       </main>
