@@ -10,78 +10,81 @@ html {
 
 /* ── Dark theme (default) ── */
 :root {
-  --bg:                 #09090b;
-  --bg-nav:             rgba(9,9,11,0.88);
-  --surface:            #111113;
-  --surface-2:          #1c1c1f;
-  --border-color:       #27272a;
-  --border-subtle:      #1f1f22;
-  --text-primary:       #fafafa;
-  --text-secondary:     #a1a1aa;
-  --text-muted:         #71717a;
-  --text-dim:           #52525b;
-  --input-bg:           #111113;
-  --prompt-bg:          #0d0d0f;
-  --prompt-bar:         #111113;
-  --prompt-text:        #d4d4d8;
-  --callout-bg:         #1c1c1f;
-  --tag-bg:             #1c1c1f;
-  --tag-color:          #71717a;
-  --tag-border:         #2d2d30;
-  --btn-secondary:      #1c1c1f;
-  --btn-secondary-border: #2d2d30;
-  --num-deco-color:     transparent;
-  --num-deco-stroke:    #27272a;
-  --fade-gradient:      rgba(13,13,15,0);
-  --fade-gradient-end:  #0d0d0f;
-  --toggle-bg:          #18181b;
-  --toggle-active-bg:   #27272a;
-  --toggle-active-color:#fafafa;
-  --toast-bg:           #fafafa;
-  --toast-color:        #09090b;
-  --strip-bg:           #111113;
-  --strip-border:       #1f1f22;
-  --filter-active-bg:   #fafafa;
-  --filter-active-color:#09090b;
-  --scrollbar-thumb:    #3f3f46;
+  --bg:                    #09090b;
+  --bg-nav:                rgba(9,9,11,0.88);
+  --surface:               #111113;
+  --surface-2:             #1c1c1f;
+  --border-color:          #27272a;
+  --border-subtle:         #1f1f22;
+  --text-primary:          #fafafa;
+  --text-secondary:        #a1a1aa;
+  --text-muted:            #71717a;
+  --text-dim:              #52525b;
+  --input-bg:              #111113;
+  --prompt-bg:             #0d0d0f;
+  --prompt-bar:            #111113;
+  --prompt-text:           #d4d4d8;
+  --callout-bg:            #1c1c1f;
+  --tag-bg:                #1c1c1f;
+  --tag-color:             #71717a;
+  --tag-border:            #2d2d30;
+  --btn-secondary:         #1c1c1f;
+  --btn-secondary-border:  #2d2d30;
+  --btn-secondary-hover:   #27272a;
+  --num-deco-stroke:       #27272a;
+  --fade-from:             rgba(13,13,15,0);
+  --fade-to:               #0d0d0f;
+  --toggle-bg:             #18181b;
+  --toggle-active-bg:      #27272a;
+  --toggle-active-color:   #fafafa;
+  --toast-bg:              #fafafa;
+  --toast-color:           #09090b;
+  --strip-bg:              #111113;
+  --strip-border:          #1f1f22;
+  --filter-active-bg:      #fafafa;
+  --filter-active-color:   #09090b;
+  --focus-ring:            #6366f1;
+  --scrollbar-thumb:       #3f3f46;
+  /* Card accent is set per-card via inline style: --accent */
 }
 
 /* ── Light theme ── */
 .light {
-  --bg:                 #f9f9fb;
-  --bg-nav:             rgba(249,249,251,0.88);
-  --surface:            #ffffff;
-  --surface-2:          #f4f4f5;
-  --border-color:       #e4e4e7;
-  --border-subtle:      #e4e4e7;
-  --text-primary:       #09090b;
-  --text-secondary:     #3f3f46;
-  --text-muted:         #52525b;
-  --text-dim:           #a1a1aa;
-  --input-bg:           #ffffff;
-  --prompt-bg:          #f4f4f5;
-  --prompt-bar:         #ececee;
-  --prompt-text:        #3f3f46;
-  --callout-bg:         #f4f4f5;
-  --tag-bg:             #f4f4f5;
-  --tag-color:          #52525b;
-  --tag-border:         #e4e4e7;
-  --btn-secondary:      #f4f4f5;
-  --btn-secondary-border: #e4e4e7;
-  --num-deco-color:     transparent;
-  --num-deco-stroke:    #e4e4e7;
-  --fade-gradient:      rgba(244,244,245,0);
-  --fade-gradient-end:  #f4f4f5;
-  --toggle-bg:          #f4f4f5;
-  --toggle-active-bg:   #ffffff;
-  --toggle-active-color:#09090b;
-  --toast-bg:           #09090b;
-  --toast-color:        #fafafa;
-  --strip-bg:           #ffffff;
-  --strip-border:       #e4e4e7;
-  --filter-active-bg:   #09090b;
-  --filter-active-color:#fafafa;
-  --scrollbar-thumb:    #d4d4d8;
+  --bg:                    #f9f9fb;
+  --bg-nav:                rgba(249,249,251,0.88);
+  --surface:               #ffffff;
+  --surface-2:             #f4f4f5;
+  --border-color:          #e4e4e7;
+  --border-subtle:         #e4e4e7;
+  --text-primary:          #09090b;
+  --text-secondary:        #3f3f46;
+  --text-muted:            #52525b;
+  --text-dim:              #a1a1aa;
+  --input-bg:              #ffffff;
+  --prompt-bg:             #f4f4f5;
+  --prompt-bar:            #ececee;
+  --prompt-text:           #3f3f46;
+  --callout-bg:            #f4f4f5;
+  --tag-bg:                #f4f4f5;
+  --tag-color:             #52525b;
+  --tag-border:            #e4e4e7;
+  --btn-secondary:         #f4f4f5;
+  --btn-secondary-border:  #e4e4e7;
+  --btn-secondary-hover:   #ececee;
+  --num-deco-stroke:       #e4e4e7;
+  --fade-from:             rgba(244,244,245,0);
+  --fade-to:               #f4f4f5;
+  --toggle-bg:             #f4f4f5;
+  --toggle-active-bg:      #ffffff;
+  --toggle-active-color:   #09090b;
+  --toast-bg:              #09090b;
+  --toast-color:           #fafafa;
+  --strip-bg:              #ffffff;
+  --strip-border:          #e4e4e7;
+  --filter-active-bg:      #09090b;
+  --filter-active-color:   #fafafa;
+  --focus-ring:            #6366f1;
+  --scrollbar-thumb:       #d4d4d8;
 }
 
 body {
@@ -92,29 +95,75 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
-/* Scrollbar */
+/* ── Global focus-visible ring ── */
+/* Remove default outline, add consistent ring only on keyboard nav */
+*:focus { outline: none; }
+*:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
 
-/* Prompt fade overlay */
+/* ── Prompt fade overlay ── */
 .fade-overlay {
-  background: linear-gradient(to bottom, var(--fade-gradient) 0%, var(--fade-gradient-end) 100%);
+  background: linear-gradient(to bottom, var(--fade-from) 0%, var(--fade-to) 100%);
 }
 
-/* Decorative number behind card */
-.num-deco {
-  font-size: 6.5rem;
-  font-weight: 900;
-  line-height: 1;
-  color: var(--num-deco-color);
-  -webkit-text-stroke: 1px var(--num-deco-stroke);
-  user-select: none;
-  letter-spacing: -0.04em;
-  pointer-events: none;
+/* ── Card ── */
+/* --accent is set as inline style per card */
+.card-item {
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
 }
 
-/* Horizontal scroll for filters */
+.card-item:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent, #6366f1) 45%, transparent) !important;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent, #6366f1) 18%, transparent),
+    0 16px 48px rgba(0, 0, 0, 0.14);
+}
+
+/* Accent top bar — shown on hover via group */
+.card-accent-bar {
+  height: 2px;
+  width: 100%;
+  background: var(--accent, #6366f1);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.card-item:hover .card-accent-bar {
+  opacity: 1;
+}
+
+/* ── Prompt expand/collapse ── */
+/* CSS grid row trick — animates to real content height, no magic numbers */
+.prompt-expandable {
+  display: grid;
+  grid-template-rows: 148px;
+  overflow: hidden;
+  transition: grid-template-rows 0.32s ease;
+}
+
+.prompt-expandable[data-expanded="true"] {
+  grid-template-rows: 1fr;
+}
+
+.prompt-expandable__inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.prompt-expandable[data-expanded="true"] .prompt-expandable__inner {
+  overflow-y: auto;
+}
+
+/* ── Horizontal filter scroll (hide scrollbar, keep keyboard access) ── */
 .filter-scroll {
   overflow-x: auto;
   scrollbar-width: none;
@@ -122,15 +171,19 @@ body {
 }
 .filter-scroll::-webkit-scrollbar { display: none; }
 
-/* Card hover */
-.card-item {
-  transition: border-color 0.22s, box-shadow 0.22s, transform 0.22s;
-}
-.card-item:hover {
-  transform: translateY(-2px);
+/* ── Decorative number ── */
+.num-deco {
+  font-size: 6.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--num-deco-stroke);
+  user-select: none;
+  letter-spacing: -0.04em;
+  pointer-events: none;
 }
 
-/* Monospace */
+/* ── Mono font ── */
 .mono {
   font-family: var(--font-geist-mono), 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
 }
