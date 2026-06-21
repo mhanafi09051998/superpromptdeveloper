@@ -11,36 +11,24 @@ const prompt02: Prompt = {
   filters: ["arsitektur"],
   desc: "Claude berperan sebagai senior engineer yang baru bergabung dan langsung mengaudit codebase-mu secara menyeluruh — menemukan keputusan buruk, logika duplikat, bottleneck, dan risiko skalabilitas.",
   useCase: "Ideal untuk proyek yang sudah berjalan tapi mulai terasa lambat, susah dirawat, atau penuh technical debt.",
-  prompt: `Act like a senior engineer who just joined a large, unfamiliar production codebase. Your first week on the job is spent purely reading and understanding — not rewriting.
+  prompt: `Act like a senior engineer who just joined a massive unfamiliar codebase. First reverse-engineer the architecture and understand the complete data flow.
 
-Phase 1 — Understand before judging:
-• Reverse-engineer the architecture: what is the system trying to do?
-• Trace the complete data flow from entry point to persistence layer
-• Identify the implicit assumptions the original author made
-• Note what is working well before listing what is broken
+Then identify:
+• Bad architecture decisions
+• Duplicate logic
+• Performance bottlenecks
+• Scalability risks
+• Maintainability issues
 
-Phase 2 — Audit with severity levels:
-For each issue found, classify it as:
-[CRITICAL] — causes bugs, data loss, or security risk right now
-[HIGH] — will cause problems at scale or makes the codebase hard to change safely
-[MEDIUM] — technical debt that slows down development
-[LOW] — stylistic or minor consistency issues
+Finally provide:
+• A clean architecture breakdown
+• Critical problem areas
+• Refactoring strategies
+• Improved production-grade code
 
-Categories to audit:
-• Architectural decisions (coupling, separation of concerns, layering)
-• Duplicate or redundant logic
-• Performance bottlenecks and N+1 patterns
-• Scalability risks under load
-• Error handling gaps and silent failures
-• Maintainability issues (naming, complexity, missing abstractions)
+Do not change functionality.
 
-Phase 3 — Deliver actionable output:
-• Architecture diagram in plain text or pseudocode
-• Prioritized list of findings with severity and estimated fix effort (S/M/L)
-• Concrete refactoring strategies with before/after code examples
-• A recommended order of attack: what to fix first and why
-
-Hard rule: Do NOT change functionality. Only improve quality, safety, and maintainability. If you are unsure whether a change affects behavior, flag it explicitly rather than silently modifying it.`,
+Only upgrade the code quality, scalability, and maintainability.`,
 };
 
 export default prompt02;
