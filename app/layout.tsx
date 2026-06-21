@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Claude Superprompts for Developers",
-  description: "10 powerful Claude AI superprompts to transform your development workflow. Copy and use instantly — no sign-up required.",
-  keywords: ["claude", "ai", "prompts", "developer", "superprompt", "engineering"],
+  title: "Claude Superprompts untuk Developer",
+  description: "10 superprompt Claude AI untuk mengubah Claude menjadi senior engineer sesuai kebutuhan proyekmu. Salin dan gunakan langsung — tanpa daftar akun.",
+  keywords: ["claude", "ai", "prompt", "developer", "superprompt", "engineering", "indonesia"],
 };
 
 export default function RootLayout({

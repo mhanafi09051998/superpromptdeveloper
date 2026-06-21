@@ -1,17 +1,29 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
+import {
+  Copy, Check, ChevronDown, ChevronUp,
+  Rocket, ScanSearch, Bug, Zap, Layers,
+  Server, Monitor, Brain, ShieldCheck, Container,
+} from "lucide-react";
 import type { Prompt } from "@/lib/prompts";
+
+const ICONS: Record<string, React.ElementType> = {
+  Rocket, ScanSearch, Bug, Zap, Layers,
+  Server, Monitor, Brain, ShieldCheck, Container,
+};
 
 interface Props {
   prompt: Prompt;
   onCopied: () => void;
+  index: number;
 }
 
-export default function PromptCard({ prompt: p, onCopied }: Props) {
+export default function PromptCard({ prompt: p, onCopied, index }: Props) {
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
+
+  const Icon = ICONS[p.icon] ?? Zap;
 
   async function handleCopy() {
     await navigator.clipboard.writeText(p.prompt);
@@ -20,145 +32,150 @@ export default function PromptCard({ prompt: p, onCopied }: Props) {
     setTimeout(() => setCopied(false), 2200);
   }
 
+  const isEven = index % 2 === 0;
+
   return (
     <article
-      className="group flex flex-col rounded-2xl border transition-all duration-300 hover:-translate-y-1 overflow-hidden"
-      style={{
-        background: "#1a1d27",
-        borderColor: "#2a2d3e",
-        boxShadow: "none",
-      }}
+      className="card-item relative flex flex-col rounded-2xl border overflow-hidden"
+      style={{ background: "#111113", borderColor: "#27272a" }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor = "#3a3d58";
-        (e.currentTarget as HTMLElement).style.boxShadow =
-          "0 12px 40px rgba(0,0,0,0.4)";
+        const el = e.currentTarget as HTMLElement;
+        el.style.borderColor = p.accent + "55";
+        el.style.boxShadow = `0 0 0 1px ${p.accent}22, 0 16px 48px rgba(0,0,0,0.5)`;
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor = "#2a2d3e";
-        (e.currentTarget as HTMLElement).style.boxShadow = "none";
+        const el = e.currentTarget as HTMLElement;
+        el.style.borderColor = "#27272a";
+        el.style.boxShadow = "none";
       }}
     >
-      {/* Accent top bar */}
+      {/* Decorative number */}
       <div
-        className="h-[2px] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{ background: p.accentColor }}
-      />
-
-      {/* Header */}
-      <div className="flex items-start gap-3 px-5 pt-5">
-        <div
-          className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-          style={{ background: p.iconBg }}
-          aria-hidden="true"
-        >
-          {p.icon}
-        </div>
-        <div className="flex-1 min-w-0">
-          <p
-            className="text-xs font-bold uppercase tracking-widest mb-1"
-            style={{ color: p.accentColor }}
-          >
-            Prompt {p.num}
-          </p>
-          <h2 className="text-[0.95rem] font-bold leading-snug text-slate-100">
-            {p.title}
-          </h2>
-        </div>
+        className="num-deco absolute -top-4 right-4 select-none pointer-events-none"
+        aria-hidden="true"
+      >
+        {p.num}
       </div>
 
-      {/* Tags */}
-      <div className="flex flex-wrap gap-1.5 px-5 pt-3" aria-label="Tags">
-        {p.tags.map((tag) => (
+      {/* Top section */}
+      <div className="relative px-6 pt-6 pb-0">
+        {/* Icon + subtitle */}
+        <div className="flex items-center gap-2.5 mb-4">
+          <div
+            className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: p.accent + "1a" }}
+          >
+            <Icon size={17} style={{ color: p.accent }} aria-hidden="true" />
+          </div>
           <span
-            key={tag}
-            className="text-[0.68rem] font-semibold px-2 py-0.5 rounded"
-            style={{ background: "rgba(108,99,255,0.12)", color: "#a09aff" }}
+            className="text-[0.7rem] font-bold uppercase tracking-[0.1em]"
+            style={{ color: p.accent }}
           >
-            {tag}
+            {p.subtitle}
           </span>
-        ))}
+        </div>
+
+        {/* Title */}
+        <h2 className="text-[1.05rem] font-bold leading-snug text-zinc-100 mb-2 pr-10">
+          {p.title}
+        </h2>
+
+        {/* Description */}
+        <p className="text-[0.83rem] leading-relaxed text-zinc-400 mb-3">
+          {p.desc}
+        </p>
+
+        {/* Use case callout */}
+        <div
+          className="flex gap-2 rounded-lg px-3 py-2.5 mb-4 text-[0.78rem] leading-relaxed"
+          style={{ background: "#1c1c1f", borderLeft: `3px solid ${p.accent}` }}
+        >
+          <span className="text-zinc-500 shrink-0 font-semibold">Kapan pakai:</span>
+          <span className="text-zinc-400">{p.useCase}</span>
+        </div>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1.5 mb-5">
+          {p.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-[0.66rem] font-medium px-2 py-0.5 rounded-md"
+              style={{ background: "#1c1c1f", color: "#71717a", border: "1px solid #27272a" }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
 
-      {/* Description */}
-      <p className="px-5 pt-2.5 text-[0.84rem] text-slate-400 leading-relaxed">
-        {p.desc}
-      </p>
+      {/* Divider */}
+      <div className="mx-6 border-t" style={{ borderColor: "#1f1f22" }} />
 
       {/* Prompt box */}
-      <div
-        className="mx-5 mt-4 rounded-xl overflow-hidden border"
-        style={{ background: "#13151f", borderColor: "#22253a" }}
-      >
-        {/* Terminal dots */}
+      <div className="px-6 pt-4">
         <div
-          className="flex items-center justify-between px-3 py-2 border-b"
-          style={{ background: "#0e1018", borderColor: "#1e2130" }}
+          className="rounded-xl overflow-hidden border"
+          style={{ background: "#0d0d0f", borderColor: "#1f1f22" }}
         >
-          <div className="flex gap-1.5" aria-hidden="true">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
-          </div>
-          <span className="text-[0.65rem] font-semibold uppercase tracking-widest text-slate-600">
-            Prompt
-          </span>
-        </div>
-
-        {/* Prompt text */}
-        <div className="relative">
-          <pre
-            className="px-3.5 py-3.5 text-[0.78rem] leading-relaxed font-mono text-slate-300 whitespace-pre-wrap break-words transition-all duration-300 overflow-hidden"
-            style={{ maxHeight: expanded ? "none" : "156px" }}
+          {/* Terminal bar */}
+          <div
+            className="flex items-center gap-2 px-3.5 py-2 border-b"
+            style={{ background: "#111113", borderColor: "#1f1f22" }}
           >
-            {p.prompt}
-          </pre>
-          {!expanded && (
-            <div
-              className="prompt-fade absolute bottom-0 left-0 right-0 h-14 pointer-events-none"
-              aria-hidden="true"
-            />
-          )}
+            <div className="flex gap-1.5" aria-hidden="true">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+            </div>
+            <span className="text-[0.65rem] text-zinc-600 font-medium ml-1 uppercase tracking-widest">
+              prompt · salin dan tempelkan ke Claude
+            </span>
+          </div>
+
+          {/* Text */}
+          <div className="relative">
+            <pre
+              className="mono px-4 py-4 text-[0.76rem] leading-[1.7] text-zinc-300 whitespace-pre-wrap break-words overflow-hidden transition-[max-height] duration-300"
+              style={{ maxHeight: expanded ? "600px" : "148px" }}
+            >
+              {p.prompt}
+            </pre>
+            {!expanded && (
+              <div
+                className="fade-overlay absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+                aria-hidden="true"
+              />
+            )}
+          </div>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2 px-5 pt-3 pb-5 mt-auto">
+      <div className="flex gap-2 px-6 py-4 mt-auto">
         <button
           onClick={handleCopy}
-          aria-label={`Copy prompt ${p.num} to clipboard`}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-[0.83rem] font-semibold transition-all duration-200 border"
+          aria-label={`Salin prompt ${p.num}`}
+          className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-[0.82rem] font-semibold transition-all duration-200"
           style={{
-            background: copied ? "rgba(67,217,143,0.12)" : "#2d3148",
-            borderColor: copied ? "#43d98f" : "#3a3f5c",
-            color: copied ? "#43d98f" : "#e2e8f0",
+            background: copied ? p.accent + "20" : "#1c1c1f",
+            color: copied ? p.accent : "#d4d4d8",
+            border: `1px solid ${copied ? p.accent + "60" : "#2d2d30"}`,
           }}
         >
-          {copied ? (
-            <>
-              <Check size={14} /> Copied!
-            </>
-          ) : (
-            <>
-              <Copy size={14} /> Copy Prompt
-            </>
-          )}
+          {copied ? <Check size={14} /> : <Copy size={14} />}
+          {copied ? "Tersalin!" : "Salin Prompt"}
         </button>
         <button
           onClick={() => setExpanded((v) => !v)}
           aria-expanded={expanded}
-          aria-controls={`pt-${p.id}`}
-          className="flex items-center gap-1 px-3 py-2.5 rounded-lg text-[0.78rem] font-medium transition-all duration-200 border text-slate-400 hover:text-slate-200"
-          style={{ background: "transparent", borderColor: "#2a2d3e" }}
+          className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-[0.78rem] font-medium transition-all duration-200 text-zinc-500 hover:text-zinc-300"
+          style={{
+            background: "#1c1c1f",
+            border: "1px solid #2d2d30",
+          }}
         >
-          {expanded ? (
-            <>
-              <ChevronUp size={14} /> Collapse
-            </>
-          ) : (
-            <>
-              <ChevronDown size={14} /> Expand
-            </>
-          )}
+          {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          {expanded ? "Tutup" : "Buka"}
         </button>
       </div>
     </article>

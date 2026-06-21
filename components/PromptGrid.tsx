@@ -1,164 +1,147 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import { Search, Sparkles } from "lucide-react";
+import { useState, useMemo, useRef } from "react";
+import { Search, X } from "lucide-react";
 import { PROMPTS, FILTERS, type FilterKey } from "@/lib/prompts";
 import PromptCard from "./PromptCard";
+import Toast from "./Toast";
 
 export default function PromptGrid() {
-  const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("semua");
   const [search, setSearch] = useState("");
-  const [toastVisible, setToastVisible] = useState(false);
-  const toastTimer = useState<ReturnType<typeof setTimeout> | null>(null);
+  const [toast, setToast] = useState(false);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     return PROMPTS.filter((p) => {
       const matchFilter =
-        activeFilter === "all" || p.filters.includes(activeFilter);
+        activeFilter === "semua" || p.filters.includes(activeFilter);
       const matchSearch =
         !q ||
         p.title.toLowerCase().includes(q) ||
-        p.tags.some((t) => t.includes(q)) ||
+        p.subtitle.toLowerCase().includes(q) ||
+        p.tags.some((t) => t.toLowerCase().includes(q)) ||
         p.desc.toLowerCase().includes(q);
       return matchFilter && matchSearch;
     });
   }, [activeFilter, search]);
 
-  const showToast = useCallback(() => {
-    setToastVisible(true);
-    if (toastTimer[0]) clearTimeout(toastTimer[0]);
-    toastTimer[0] = setTimeout(() => setToastVisible(false), 2000);
-  }, [toastTimer]);
+  function showToast() {
+    setToast(true);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(false), 2200);
+  }
 
   return (
     <>
-      {/* Search */}
-      <div className="max-w-5xl mx-auto px-6 pt-10">
-        <div className="relative">
-          <Search
-            size={16}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
-            aria-hidden="true"
-          />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search prompts by role, keyword, or use case..."
-            aria-label="Search prompts"
-            className="w-full rounded-xl py-3 pl-11 pr-4 text-[0.95rem] outline-none transition-colors duration-200 border"
-            style={{
-              background: "#1a1d27",
-              borderColor: "#2a2d3e",
-              color: "#e2e8f0",
-            }}
-            onFocus={(e) =>
-              (e.currentTarget.style.borderColor = "#6c63ff")
-            }
-            onBlur={(e) =>
-              (e.currentTarget.style.borderColor = "#2a2d3e")
-            }
-          />
-        </div>
-      </div>
-
-      {/* Filter bar */}
+      {/* Sticky header: search + filter */}
       <div
         className="sticky top-0 z-40 border-b"
         style={{
-          background: "rgba(15,17,23,0.85)",
-          backdropFilter: "blur(16px)",
-          borderColor: "#2a2d3e",
+          background: "rgba(9,9,11,0.92)",
+          backdropFilter: "blur(20px)",
+          borderColor: "#18181b",
         }}
       >
-        <div className="max-w-5xl mx-auto px-6 py-3.5 flex gap-2 flex-wrap items-center">
-          <span className="text-[0.7rem] font-bold uppercase tracking-widest text-slate-600 mr-1">
-            Filter:
-          </span>
-          {FILTERS.map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setActiveFilter(f.key)}
-              aria-pressed={activeFilter === f.key}
-              className="px-3.5 py-1.5 rounded-full text-[0.8rem] font-medium transition-all duration-200 border whitespace-nowrap"
+        {/* Search */}
+        <div className="max-w-6xl mx-auto px-5 pt-4 pb-3">
+          <div className="relative max-w-md">
+            <Search
+              size={15}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-600 pointer-events-none"
+              aria-hidden="true"
+            />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Cari berdasarkan peran, kata kunci..."
+              aria-label="Cari prompt"
+              className="w-full rounded-xl py-2.5 pl-10 pr-10 text-sm outline-none transition-colors duration-200 border"
               style={{
-                background:
-                  activeFilter === f.key ? "#6c63ff" : "#1a1d27",
-                borderColor:
-                  activeFilter === f.key ? "#6c63ff" : "#2a2d3e",
-                color:
-                  activeFilter === f.key ? "#fff" : "#8892a4",
+                background: "#111113",
+                borderColor: search ? "#3f3f46" : "#27272a",
+                color: "#d4d4d8",
               }}
-            >
-              {f.label}
-            </button>
-          ))}
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-400 transition-colors"
+                aria-label="Hapus pencarian"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="filter-scroll max-w-6xl mx-auto px-5 pb-3">
+          <div className="flex gap-2 w-max">
+            {FILTERS.map((f) => {
+              const active = activeFilter === f.key;
+              return (
+                <button
+                  key={f.key}
+                  onClick={() => setActiveFilter(f.key)}
+                  aria-pressed={active}
+                  className="px-4 py-1.5 rounded-lg text-[0.78rem] font-medium transition-all duration-200 whitespace-nowrap border"
+                  style={{
+                    background: active ? "#fafafa" : "transparent",
+                    borderColor: active ? "#fafafa" : "#27272a",
+                    color: active ? "#09090b" : "#71717a",
+                  }}
+                >
+                  {f.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Cards */}
-      <main className="max-w-5xl mx-auto px-6 py-12" id="main-content">
-        <p
-          className="text-[0.7rem] font-bold uppercase tracking-widest mb-6"
-          style={{ color: "#555e72" }}
-          aria-live="polite"
-        >
-          Showing {filtered.length} of {PROMPTS.length} prompts
-        </p>
+      {/* Grid */}
+      <main className="max-w-6xl mx-auto px-5 py-10" id="main-content">
+        {/* Result count */}
+        <div className="flex items-center justify-between mb-6">
+          <p className="text-[0.72rem] font-semibold uppercase tracking-widest text-zinc-600" aria-live="polite">
+            {filtered.length === PROMPTS.length
+              ? `${PROMPTS.length} superprompt tersedia`
+              : `${filtered.length} dari ${PROMPTS.length} superprompt`}
+          </p>
+          {(search || activeFilter !== "semua") && (
+            <button
+              onClick={() => { setSearch(""); setActiveFilter("semua"); }}
+              className="text-[0.72rem] text-zinc-600 hover:text-zinc-400 transition-colors underline underline-offset-2"
+            >
+              Reset filter
+            </button>
+          )}
+        </div>
 
         {filtered.length > 0 ? (
-          <div
-            className="grid gap-5"
-            style={{
-              gridTemplateColumns:
-                "repeat(auto-fill, minmax(320px, 1fr))",
-            }}
-            role="list"
-          >
-            {filtered.map((p) => (
-              <div key={p.id} role="listitem">
-                <PromptCard prompt={p} onCopied={showToast} />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {filtered.map((p, i) => (
+              <PromptCard key={p.id} prompt={p} onCopied={showToast} index={i} />
             ))}
           </div>
         ) : (
-          <div
-            className="text-center py-20"
-            role="status"
-            aria-live="polite"
-          >
-            <div className="text-5xl mb-4">🔍</div>
-            <p className="text-slate-400 font-semibold">No prompts found</p>
-            <p className="text-slate-600 text-sm mt-2">
-              Try a different keyword or clear the filter
-            </p>
+          <div className="flex flex-col items-center py-24 text-center">
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
+              style={{ background: "#111113", border: "1px solid #27272a" }}
+            >
+              <Search size={22} className="text-zinc-600" />
+            </div>
+            <p className="font-semibold text-zinc-400 mb-1">Tidak ada hasil</p>
+            <p className="text-sm text-zinc-600">Coba kata kunci atau filter lain</p>
           </div>
         )}
       </main>
 
-      {/* Toast */}
-      <div
-        role="status"
-        aria-live="polite"
-        className="fixed bottom-7 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300"
-        style={{
-          transform: `translateX(-50%) translateY(${toastVisible ? "0" : "80px"})`,
-          opacity: toastVisible ? 1 : 0,
-        }}
-      >
-        <div
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap"
-          style={{
-            background: "#43d98f",
-            color: "#0a2a1a",
-            boxShadow: "0 6px 24px rgba(0,0,0,0.4)",
-          }}
-        >
-          <Sparkles size={14} />
-          Copied to clipboard!
-        </div>
-      </div>
+      <Toast visible={toast} />
     </>
   );
 }
